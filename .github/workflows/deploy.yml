@@ -3,41 +3,82 @@ name: Build and Deploy
 on:
   push:
     branches:
-      - master # Change if you use "master"
+      - master # or the branch you want to deploy
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the repo
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      # Set up Python (needed for PlatformIO)
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
+    - name: Set up Python (for PlatformIO)
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
 
-      # Install PlatformIO
-      - name: Install PlatformIO
-        run: pip install platformio
+    - name: Install PlatformIO
+      run: |
+        python -m pip install --upgrade pip
+        pip install platformio
 
-      # Build your project
-      - name: Build firmware
-        run: pio run
+    - name: Build project
+      run: |
+        pio run
 
-      # Upload ONLY the binary to AwardSpace via FTP
-      - name: Upload firmware via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: f34-preview.awardspace.net
-          username: ${{ secrets.FTP_USER }}
-          password: ${{ secrets.FTP_PASS }}
-          local-dir: .pio/build/uno/ # Build output directory
-          server-dir: /yassine.mywebcommunity.org/
-          exclude: |
-            **/*
-          include: |
-            firmware.hex
+    - name: Upload binary via FTP
+      uses: appleboy/ftp-action@v0.1.6
+      with:
+        host: f34-preview.awardspace.net # your server
+        username: ${{ secrets.FTP_USER }}
+        password: ${{ secrets.FTP_PASS }}
+        local: .pio/build/uno/firmware.hex # adjust path & binary name
+        remote: /yassine.mywebcommunity.org/firmware.hex # adjust folder on server
+
+
+
+
+# name: Build and Deploy
+
+# on:
+#   push:
+#     branches:
+#       - master # Change if you use "master"
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       # Checkout the repo
+#       - name: Checkout repository
+#         uses: actions/checkout@v3
+
+#       # Set up Python (needed for PlatformIO)
+#       - name: Set up Python
+#         uses: actions/setup-python@v4
+#         with:
+#           python-version: '3.10'
+
+#       # Install PlatformIO
+#       - name: Install PlatformIO
+#         run: pip install platformio
+
+#       # Build your project
+#       - name: Build firmware
+#         run: pio run
+
+#       # Upload ONLY the binary to AwardSpace via FTP
+#       - name: Upload firmware via FTP
+#         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+#         with:
+#           server: f34-preview.awardspace.net
+#           username: ${{ secrets.FTP_USER }}
+#           password: ${{ secrets.FTP_PASS }}
+#           local-dir: .pio/build/uno/ # Build output directory
+#           server-dir: /yassine.mywebcommunity.org/
+#           exclude: |
+#             **/*
+#           include: |
+#             firmware.hex
