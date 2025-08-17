@@ -32,7 +32,7 @@ jobs:
       - name: Upload firmware via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ftp.awardspace.net
+          server: f34-preview.awardspace.net
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
           local-dir: .pio/build/uno/ # Build output directory
@@ -40,4 +40,4 @@ jobs:
           exclude: |
             **/*
           include: |
-            firmware.bin
+            firmware.hex
