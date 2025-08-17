@@ -36,7 +36,7 @@ jobs:
         server: f34-preview.awardspace.net # your server
         username: ${{ secrets.FTP_USER }}
         password: ${{ secrets.FTP_PASS }}
-        local: .pio/build/uno/firmware.hex # adjust path & binary name
+        local_dir: .pio/build/uno/firmware.hex # adjust path & binary name
         remote: /yassine.mywebcommunity.org/firmware.hex # adjust folder on server
 
 
