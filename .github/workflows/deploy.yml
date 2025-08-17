@@ -27,13 +27,16 @@ jobs:
       run: |
         pio run
 
+    - name: copy binary to temp folder
+      run: mkdir -p build && cp .pio/build/uno/firmware.hex build/
+
     - name: Upload binary via FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
       with:
         server: f34-preview.awardspace.net # your server
         username: ${{ secrets.FTP_USER }}
         password: ${{ secrets.FTP_PASS }}
-        local: .pio/build/uno/firmware.hex # Build output directory
+        local: build/firmware.hex # Build output directory
         remote: /yassine.mywebcommunity.org/firmware.hex
 
 
