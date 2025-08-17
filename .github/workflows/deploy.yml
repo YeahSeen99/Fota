@@ -28,7 +28,7 @@ jobs:
         pio run
 
     - name: Upload binary via FTP
-      uses: appleboy/ftp-action@v0.1.6
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
       with:
         host: f34-preview.awardspace.net # your server
         username: ${{ secrets.FTP_USER }}
