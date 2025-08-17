@@ -26,9 +26,6 @@ jobs:
     - name: Build project
       run: |
         pio run
-      
-    - name: Find binary
-      run: ls -R .pio/build
 
     - name: Upload binary via FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
@@ -36,8 +33,8 @@ jobs:
         server: f34-preview.awardspace.net # your server
         username: ${{ secrets.FTP_USER }}
         password: ${{ secrets.FTP_PASS }}
-        local_dir: .pio/build/uno/firmware.hex # adjust path & binary name
-        remote: /yassine.mywebcommunity.org/firmware.hex # adjust folder on server
+        local-dir: .pio/build/uno/ # Build output directory
+        server-dir: /yassine.mywebcommunity.org/
 
 
 
