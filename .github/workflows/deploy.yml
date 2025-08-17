@@ -30,7 +30,7 @@ jobs:
     - name: Upload binary via FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
       with:
-        host: f34-preview.awardspace.net # your server
+        server: f34-preview.awardspace.net # your server
         username: ${{ secrets.FTP_USER }}
         password: ${{ secrets.FTP_PASS }}
         local: .pio/build/uno/firmware.hex # adjust path & binary name
