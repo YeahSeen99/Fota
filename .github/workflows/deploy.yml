@@ -1,37 +1,43 @@
-name: Build and Deploy Firmware
+name: Build and Deploy
 
 on:
   push:
     branches:
-      - master
+      - master # Change if you use "master"
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout your repo
+      # Checkout the repo
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2. Set up PlatformIO
-      - name: Set up PlatformIO
-        uses: platformio/platformio-action@v2
+      # Set up Python (needed for PlatformIO)
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
 
-      # 3. Build firmware for SAMD21J18
+      # Install PlatformIO
+      - name: Install PlatformIO
+        run: pip install platformio
+
+      # Build your project
       - name: Build firmware
-        run: |
-          platformio run -e uno
-          mkdir -p build
-          # Copy the generated binary to 'build' folder
-          cp ./.pio/build/samd21j18/firmware.hex ./build/binary.hex
+        run: pio run
 
-      # 4. Upload firmware via FTP to AwardSpace
+      # Upload ONLY the binary to AwardSpace via FTP
       - name: Upload firmware via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ftp.awardspace.net
-          username: 4669949_Yassine # Replace with your FTP username
-          password: D7uWgUPQ*a # Replace with your FTP password
-          local-dir: ./build
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          local-dir: .pio/build/uno/ # Build output directory
           server-dir: /yassine.mywebcommunity.org/
+          exclude: |
+            **/*
+          include: |
+            firmware.bin
