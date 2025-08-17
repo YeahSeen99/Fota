@@ -27,17 +27,14 @@ jobs:
       run: |
         pio run
 
-    - name: copy binary to temp folder
-      run: mkdir -p $GITHUB_WORKSPACE/build && cp .pio/build/uno/firmware.hex $GITHUB_WORKSPACE/build/firmware.hex
-
     - name: Upload binary via FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
       with:
         server: f34-preview.awardspace.net # your server
         username: ${{ secrets.FTP_USER }}
         password: ${{ secrets.FTP_PASS }}
-        local: $GITHUB_WORKSPACE/build/firmware.hex # Build output directory
-        remote: /yassine.mywebcommunity.org/firmware.hex
+        local-dir: .pio/build/uno/ # Build output directory
+        server-dir: /yassine.mywebcommunity.org/Output/
 
 
 
